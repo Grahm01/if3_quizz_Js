@@ -35,18 +35,18 @@ let quizz; // = JSON.parse(quizzString);
 
 function preload() {
     this.load.image('background', './assets/Sprites/background.png');
-    this.load.image('labelquestion', './assets/Sprites/label1.png');
-    this.load.image('labelanswer', './assets/Sprites/label2.png');
-    this.load.image('playimg', './assets/Sprites/play.png');
-    this.load.image('playOFFimg', './assets/Sprites/playOFF.png');
-    this.load.image('starImage', './assets/Sprites/Star.png');
+    this.load.image('labelquestion', './assets/Sprites/label11.png');
+    this.load.image('labelanswer', './assets/Sprites/label21.png');
+    this.load.image('playimg', './assets/Sprites/play1.png');
+    this.load.image('playOFFimg', './assets/Sprites/playOFF1.png');
+    this.load.image('starImage', './assets/Sprites/Star1.png');
     this.load.json('questions', './assets/data/Questions.json');
     this.load.audio('goodSound', './assets/Sound/good.wav');
     this.load.audio('wrongSound', './assets/Sound/wrong.wav');
 
-    this.load.image('welcomeImage', './assets/Sprites/Windows3.png');
-    this.load.image('menuImage', './assets/Sprites/Menu.png');
-    this.load.image('restartImage', './assets/Sprites/Restart.png');
+    this.load.image('welcomeImage', './assets/Sprites/Windows31.png');
+    this.load.image('menuImage', './assets/Sprites/Menu1.png');
+    this.load.image('restartImage', './assets/Sprites/Restart1.png');
 }
 
 
@@ -59,11 +59,11 @@ function create() {
     questionImage.setScale(0.5);
     questionImage.setVisible(false);
     
-    playOffImage = this.add.image(300, 540, 'playOFFimg');
+    playOffImage = this.add.image(300, 525, 'playOFFimg');
     playOffImage.setScale(0.4);
-    playOffImage.setVisible(false);
+    playOffImage.setVisible(true);
 
-    playImage = this.add.image(300, 540, 'playimg').setInteractive();
+    playImage = this.add.image(300, 525, 'playimg').setInteractive();
     playImage.on('pointerdown', displayNextQuestion)
     playImage.setScale(0.4);
     playImage.alpha=0;
@@ -76,23 +76,23 @@ function create() {
     welcome.setScale(0.7);
     welcome.alpha=1;
 
-    menu = this.add.image(300, 350, 'menuImage').setInteractive();
+    menu = this.add.image(300, 380, 'menuImage').setInteractive();
     menu.on('pointerdown', displayGameScreen)
     menu.setScale(0.4);
 
-    restart = this.add.image(300, 350, 'restartImage').setInteractive();
-    restart.setVisible(false);
+    restart = this.add.image(300, 380, 'restartImage').setInteractive();
     restart.setScale(0.4);
     restart.on('pointerdown', restartGame)
+    restart.setVisible(false);
 
 
-    quizText = this.add.text(140,260, "poussez le bouton pour commencer");
-
+    quizText = this.add.text(275, 155, "QUIZ", { fontFamily: 'Arial', fontSize: 20, color: '#000000' });
+    welcomeText = this.add.text(170, 420, "Pressez sur le chocobo pour commencer", { fontFamily: 'Arial', fontSize: 15, color: '#6e1421' });
 
 
     for (let i=0; i<10; i++){
-        starImage[i] = this.add.image(50 + i*55,610, 'starImage');
-        starImage[i].setScale(0.2);
+        starImage[i] = this.add.image(50 + i*55,605, 'starImage');
+        starImage[i].setScale(0.3);
         starImage[i].alpha = 0.5;
     }
 
@@ -102,9 +102,9 @@ function create() {
         answerImage[i].setScale(1.0);
         answerImage[i].setVisible(false);
     }
-    questionText = this.add.text(155, 75, quizz.questions[0].title, { fontFamily: 'Arial', fontSize: 18, color: '#00ff00' });
+    questionText = this.add.text(155, 75, quizz.questions[0].title, { fontFamily: 'Arial', fontSize: 18, color: '#b17811' });
     for(let i=0; i<answerNumber; i++) {
-        answerText[i] = this.add.text(190, 210+i*110, quizz.questions[0].answers[i], { fontFamily: 'Arial', fontSize: 18, color: '#00ff00' });
+        answerText[i] = this.add.text(270, 210+i*110, quizz.questions[0].answers[i], { fontFamily: 'Arial', fontSize: 18, color: '#6e1421' });
         answerText[i].setVisible(false);
     }
     questionText.setVisible(false);
@@ -117,13 +117,13 @@ function checkAnswer(answerIndex){
     if (answerIndex==quizz.questions[currentQuestionIndex].goodAnswerIndex) {
         //alert("OK");
         goodSound.play();
-        starImage[currentQuestionIndex].alpha = 1;
         score++;       
+        starImage[currentQuestionIndex].alpha = 1;
     }
     else {
         wrongSound.play();
         //alert("Pas OK");
-        starImage[currentQuestionIndex].tint = 0xff0000;
+        starImage[currentQuestionIndex].tint = 0xff0fff;
     }
     
     playImage.alpha=1;
@@ -139,7 +139,6 @@ function checkAnswer(answerIndex){
         if (currentQuestionIndex > 9){
             //alert("Vous avez " + score + " sur 10!")
             displayGameOver();
-
         } 
         else {
             questionText.text = quizz.questions[currentQuestionIndex].title;
@@ -155,7 +154,7 @@ function checkAnswer(answerIndex){
     function displayGameScreen(){
         welcome.setVisible(false);
         quizText.setVisible(false);
-        welcome.setVisible(false);
+        welcomeText.setVisible(false);
         menu.setVisible(false);
 
         questionImage.setVisible(true);
@@ -174,8 +173,8 @@ function checkAnswer(answerIndex){
     function displayGameOver(){
         welcome.setVisible(true);
         quizText.setVisible(false);
-        welcome.setVisible(true);
-        welcome.text="Vous avez un score de "+ score + "/10\nPresser le bouton pour recommencer";
+        welcomeText.setVisible(true);
+        welcomeText.text="Vous avez un score de "+ score + "/10";
         restart.setVisible(true);
 
         playImage.setVisible(false);
@@ -190,7 +189,6 @@ function checkAnswer(answerIndex){
     function restartGame(){
         currentQuestionIndex = -1;
         displayNextQuestion();
-
         restart.setVisible(false);
         displayGameScreen();
         score=0;
